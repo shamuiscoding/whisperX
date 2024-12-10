@@ -206,11 +206,13 @@ class FasterWhisperPipeline(Pipeline):
         task=None,
         chunk_size=30,
         print_progress=False,
-        initial_prompt=None,
+        prompt=None,
         combined_progress=False,
     ) -> TranscriptionResult:
-        if isinstance(initial_prompt, str) and initial_prompt.strip():
-            self.options = self.options._replace(initial_prompt=initial_prompt)
+        if prompt:
+            self.options = faster_whisper.transcribe.TranscriptionOptions(
+                **{**self.options.__dict__, "initial_prompt": prompt}
+            )
 
         if isinstance(audio, str):
             audio = load_audio(audio)
